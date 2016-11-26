@@ -90,3 +90,9 @@ class DummySensor(Sensor):
                 queue.put((datetime.utcnow(), 1.0))
         thread = Thread(target=run)
         return thread
+
+
+def sensors_from_config():
+    """Create the sensor objects."""
+    sensors = [DummySensor()]
+    return sensors
