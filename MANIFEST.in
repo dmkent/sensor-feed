@@ -1,0 +1,2 @@
+include versioneer.py
+include sensor_feed/_version.py
