@@ -35,7 +35,7 @@ class LoggingSink(Sink):
 def sinks_from_config():
     """Create the sink objects."""
     LOGGER.critical('Starting sinks...')
-    sinks = [PrintingSink(), LoggingSink()]
+    sinks = [LoggingSink()]
     return sinks
 
 

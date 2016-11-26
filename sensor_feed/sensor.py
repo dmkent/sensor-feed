@@ -72,11 +72,12 @@ class Sensor:
         raise NotImplementedError("Subclasses must implement.")
 
 
-class DummySensor(Sensor):
+class SleepingSensor(Sensor):
     """A simple dummy sensor for testing."""
-    param_name = 'Ones'
-    param_id = 'dummy'
-    param_unit = '1'
+    def get_value(self):
+        """Get sensor value."""
+        raise NotImplementedError("Subclasses must implement.")
+
 
     def get_thread(self, queue, period, shutdown_event):
         def run():
@@ -87,12 +88,50 @@ class DummySensor(Sensor):
                     keep_going = False
                     continue
 
-                queue.put((datetime.utcnow(), 1.0))
+                queue.put((datetime.utcnow(), self.get_value()))
         thread = Thread(target=run)
         return thread
 
 
+class ConstantSensor(SleepingSensor):
+    """A simple constant value sensor for testing."""
+    param_name = 'contstant'
+    param_id = 'constant'
+    param_unit = '1'
+
+    def __init__(self, *args, value=1.0, name='constant', **kwargs):
+        super(ConstantSensor, self).__init__(*args, **kwargs)
+        self.value = value
+        self.param_name = name
+
+
+    def get_value(self):
+        return self.value
+
+
+def load_average():
+    with open("/proc/stat") as stat:
+        a = [float(val) for val in stat.readline().split()[1:5]]
+    time.sleep(1)
+
+    with open("/proc/stat") as stat:
+        b = [float(val) for val in stat.readline().split()[1:5]]
+
+    loadavg = (((b[0] + b[1] + b[2]) - (a[0] + a[1] + a[2])) /
+               ((b[0] + b[1] + b[2] + b[3]) - (a[0] + a[1] + a[2] + a[3])))
+    return loadavg
+
+
+class CpuLoadAverage(SleepingSensor):
+    param_name = 'cpu'
+    param_id = 'cpu'
+    param_unit = '%'
+
+    def get_value(self):
+        return load_average()
+
+
 def sensors_from_config():
     """Create the sensor objects."""
-    sensors = [DummySensor()]
+    sensors = [CpuLoadAverage(), ConstantSensor(), ConstantSensor(value=5, name='Norwegian Blue')]
     return sensors
