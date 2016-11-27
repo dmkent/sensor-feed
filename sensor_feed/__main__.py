@@ -19,6 +19,9 @@ def get_parser():
     parser.add_argument('-v', '--verbose', action='count', default=0,
                         help='verbosity level, repeat for higher verbosity')
 
+    parser.add_argument('--sensor-period', default=10, type=int,
+                        help="the number of seconds between sensor readings, default is 10")
+
     return parser
 
 
@@ -30,14 +33,12 @@ def main(args=None):
     log_level = (5 - args.verbose) * 10
     logging.basicConfig(level=log_level, format='%(asctime)s: %(message)s')
 
-    period = 3
-
     # Create sensor and sink objects.
     sensors = sensors_from_config()
     sinks = sinks_from_config()
 
     # Create the feed
-    feed = SensorFeed(sensors, sinks, period)
+    feed = SensorFeed(sensors, sinks, args.sensor_period)
 
     # Start our sensors running
     feed.start_sensors()

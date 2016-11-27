@@ -43,7 +43,8 @@ class Sensor:
             seconds.
         """
         if self.min_period is not None and period < self.min_period:
-            raise ValueError("Requested period is too short. " +
+            raise ValueError("Requested period is too short " +
+                             "for %s sensor. " % self.param_name +
                              "Must be greater than {} seconds".format(
                                  self.min_period
                              ))
@@ -145,6 +146,7 @@ class CpuLoadAverage(SleepingSensor):
     param_name = 'cpu'
     param_id = 'cpu'
     param_unit = '%'
+    min_period = 1.1
 
     def get_value(self):
         return load_average()
