@@ -14,7 +14,10 @@ LOGGER = logging.getLogger(__name__)
 def get_parser():
     """Get an ArgumentParser."""
     parser = argparse.ArgumentParser()
-    parser.add_argument('--version', action='version', version=__version__)
+    parser.add_argument('--version', action='version', version=__version__,
+                        help='show version information and exit')
+    parser.add_argument('-v', '--verbose', action='count', default=0,
+                        help='verbosity level, repeat for higher verbosity')
 
     return parser
 
@@ -23,6 +26,9 @@ def main(args=None):
     """Run the feed!"""
     if args is None:
         args = get_parser().parse_args()
+
+    log_level = (5 - args.verbose) * 10
+    logging.basicConfig(level=log_level, format='%(asctime)s: %(message)s')
 
     period = 3
 
@@ -47,5 +53,4 @@ def main(args=None):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s: %(message)s')
     main()
