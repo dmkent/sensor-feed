@@ -62,14 +62,15 @@ class Sensor:
         self.current_thread.start()
 
 
-    def stop(self):
+    def stop(self, join=True):
         """Stop collecting data."""
         if self.current_thread is None:
             return
         self.shutdown_event.set()
-        self.current_thread.join()
-        self.shutdown_event = None
-        self.current_thread = None
+        if join:
+            self.current_thread.join()
+            self.shutdown_event = None
+            self.current_thread = None
         return
 
     def get_thread(self, queue, period, shutdown_event):

@@ -42,7 +42,11 @@ class SensorFeed:
         """
         LOGGER.critical('Shutting down sensors...')
         for sensor in self.sensors:
+            # First pass we only trigger the stop event.
+            sensor.stop(join=False)
+        for sensor in self.sensors:
             LOGGER.critical('... %s', sensor.param_name)
+            # Second pass we actually wait for thread to be joined.
             sensor.stop()
         LOGGER.critical('... done.')
 
