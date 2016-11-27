@@ -102,5 +102,10 @@ def sinks_from_config():
     sinks = [LoggingSink()]
     if not NO_PANDAS:
         sinks.append(DataFrameSink())
-        sinks.append(PrintingBufferSink(max_buffer=5))
+        sinks.append(PrintingBufferSink(max_buffer=3))
+    try:
+        from sensor_feed.sink_phildb import PhilDBSink
+        sinks.append(PhilDBSink('phildb', max_buffer=3))
+    except ImportError:
+        pass
     return sinks
