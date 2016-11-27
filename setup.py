@@ -15,6 +15,6 @@ setup(
     long_description=long_description,
     author="David Kent",
     author_email="davidkent@fastmail.com.au",
-    url="https://github.com/dmkent/sensor-feed/"
+    url="https://github.com/dmkent/sensor-feed/",
     license="MIT",
 )
