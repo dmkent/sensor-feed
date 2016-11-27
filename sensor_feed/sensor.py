@@ -1,7 +1,11 @@
 """Sensor definitions."""
 from datetime import datetime
+import logging
 from threading import Event, Thread
 import time
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 class Sensor:
@@ -83,12 +87,27 @@ class SleepingSensor(Sensor):
         def run():
             keep_going = True
             while keep_going:
-                time.sleep(period)
+                trigger_time = time.time()
+                next_trigger = trigger_time + period
+
                 if shutdown_event.is_set():
                     keep_going = False
                     continue
 
-                queue.put((datetime.utcnow(), self.get_value()))
+                # We allow for get_value taking some time to get
+                # the value.
+                # This is done by only sleeping by period - get_value time.
+                queue.put((datetime.fromtimestamp(trigger_time),
+                           self.get_value()))
+
+                finished_time = time.time()
+                sleep_time = next_trigger - finished_time
+                LOGGER.debug('Sensor thread for %s: sleep=%f', self.param_name, sleep_time)
+                if sleep_time < 0:
+                    raise RuntimeError("Sensor too slow. Unable to get " +
+                                       "reading in configured period of "
+                                       "%f seconds." % period)
+                time.sleep(sleep_time)
         thread = Thread(target=run)
         return thread
 
