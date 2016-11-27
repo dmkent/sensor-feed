@@ -45,11 +45,14 @@ def main(args=None):
         # Start the main event loop
         feed.run()
     except KeyboardInterrupt:
+        # expected so don't propogate
+        pass
+    finally:
         # Quiting, stop the sensors.
         feed.stop_sensors()
 
-    # Tidy up
-    feed.finalise_sinks()
+        # Tidy up
+        feed.finalise_sinks()
 
 
 if __name__ == '__main__':
