@@ -36,7 +36,7 @@ class LoggingSink(Sink):
 
     def process_value(self, param_name, timestamp, value):
         """Handle a single datapoint."""
-        self.logger.warn('%s - %s - %f', param_name, timestamp, value)
+        self.logger.warn('%s - %s - %f', timestamp, param_name, value)
 
 
 def round_datetime(dtime, freq):
