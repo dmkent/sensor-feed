@@ -156,4 +156,9 @@ class CpuLoadAverage(SleepingSensor):
 def sensors_from_config():
     """Create the sensor objects."""
     sensors = [CpuLoadAverage(), ConstantSensor(), ConstantSensor(value=5, name='Norwegian Blue')]
+    try:
+        from sensor_feed.sensor_multi import ProcMultiSensor
+        sensors += ProcMultiSensor().get_sensors()
+    except ImportError as thrown:
+        print(thrown)
     return sensors
