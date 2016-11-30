@@ -6,6 +6,7 @@ from sensor_feed import __version__
 from sensor_feed.feed import SensorFeed
 from sensor_feed.sensor import sensors_from_config
 from sensor_feed.sink import sinks_from_config
+from sensor_feed.plant_control import PlantControl
 
 
 LOGGER = logging.getLogger(__name__)
@@ -36,6 +37,10 @@ def main(args=None):
     # Create sensor and sink objects.
     sensors = sensors_from_config()
     sinks = sinks_from_config()
+
+    plant = PlantControl()
+    sensors.append(plant)
+    sinks.append(plant)
 
     # Create the feed
     feed = SensorFeed(sensors, sinks, args.sensor_period)

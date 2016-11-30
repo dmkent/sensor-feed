@@ -153,9 +153,32 @@ class CpuLoadAverage(SleepingSensor):
         return load_average()
 
 
+class RiseAndFallSensor(SleepingSensor):
+    """A simple constant value sensor for testing."""
+    param_name = 'soil'
+    param_id = 'soil'
+    param_unit = '1'
+
+    def __init__(self, *args, **kwargs):
+        super(RiseAndFallSensor, self).__init__(*args, **kwargs)
+        self._value = 0.0
+        self.max_val = 20.0
+        self._delta = 2.0
+
+
+    def get_value(self):
+        cur = self._value
+        newval = cur + self._delta
+        if newval > self.max_val or newval < 0:
+            self._delta *= -1
+            newval += (2 * self._delta)
+        self._value = newval
+        return cur
+
+
 def sensors_from_config():
     """Create the sensor objects."""
-    sensors = [CpuLoadAverage(), ConstantSensor(), ConstantSensor(value=5, name='Norwegian Blue')]
+    sensors = [RiseAndFallSensor(), CpuLoadAverage(), ConstantSensor(), ConstantSensor(value=5, name='Norwegian Blue')]
     try:
         from sensor_feed.sensor_multi import ProcMultiSensor
         sensors += ProcMultiSensor().get_sensors()
