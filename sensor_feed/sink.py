@@ -94,18 +94,3 @@ class BufferedSink(Sink):
 class PrintingBufferSink(BufferedSink):
     def write_buffer(self, param_name, series):
         print(param_name, series)
-
-
-def sinks_from_config():
-    """Create the sink objects."""
-    LOGGER.critical('Starting sinks...')
-    sinks = [LoggingSink()]
-    if not NO_PANDAS:
-        sinks.append(DataFrameSink())
-        sinks.append(PrintingBufferSink(max_buffer=3))
-    try:
-        from sensor_feed.sink_phildb import PhilDBSink
-        sinks.append(PhilDBSink('phildb', max_buffer=3))
-    except ImportError:
-        pass
-    return sinks

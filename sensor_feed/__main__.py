@@ -4,8 +4,7 @@ import logging
 
 from sensor_feed import __version__
 from sensor_feed.feed import SensorFeed
-from sensor_feed.sensor import sensors_from_config
-from sensor_feed.sink import sinks_from_config
+from sensor_feed.config import SensorConfig
 from sensor_feed.plant_control import PlantControl
 
 
@@ -23,6 +22,8 @@ def get_parser():
     parser.add_argument('--sensor-period', default=10, type=int,
                         help="the number of seconds between sensor readings, default is 10")
 
+    parser.add_argument('--config', help='YAML config file', default=None)
+
     return parser
 
 
@@ -35,8 +36,9 @@ def main(args=None):
     logging.basicConfig(level=log_level, format='%(asctime)s: %(message)s')
 
     # Create sensor and sink objects.
-    sensors = sensors_from_config()
-    sinks = sinks_from_config()
+    config = SensorConfig(args.config)
+    sensors = config.sensors()
+    sinks = config.sinks()
 
     plant = PlantControl()
     sensors.append(plant)
