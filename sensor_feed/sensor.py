@@ -155,8 +155,8 @@ class CpuLoadAverage(SleepingSensor):
 
 class RiseAndFallSensor(SleepingSensor):
     """A simple constant value sensor for testing."""
-    param_name = 'soil'
-    param_id = 'soil'
+    param_name = 'dummy_soil'
+    param_id = 'dummy_soil'
     param_unit = '1'
 
     def __init__(self, *args, **kwargs):
