@@ -1,0 +1,15 @@
+sensors:
+  #- class: RiseAndFallSensor
+  - class: CpuLoadAverage
+  #- class: ConstantSensor
+  #- class: ConstantSensor
+  #  kwargs': {'value': 5, 'name': 'Norwegian Blue'}
+  - class: sensor_feed.sensor_adc.AdcPollSensor
+    kwargs: 
+      param_name: soil
+      param_id: soil
+      param_unit: mV
+      dtype: int
+      channel: 1
+sinks:
+ - class: LoggingSink
