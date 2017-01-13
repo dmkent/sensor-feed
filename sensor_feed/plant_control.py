@@ -3,6 +3,7 @@
 This acts a both a source (current output state) and a sink (receives sensor
 data to act on).
 """
+import atexit
 import logging
 from threading import Lock, Timer
 
@@ -33,6 +34,7 @@ class PlantControl(SleepingSensor, Sink):
         self.gpio_pin = 17
 
         GPIO.setup(self.gpio_pin, GPIO.OUT)
+        atexit.register(GPIO.cleanup)
 
     def get_value(self):
         last_water = self._water_input
