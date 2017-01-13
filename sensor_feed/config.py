@@ -40,8 +40,8 @@ class SensorConfig:
             kwargs = obj_config.get('kwargs', {})
 
             obj = SensorClass(**kwargs)
-            if hasattr(obj, 'get_objs'):
-                objs += obj.get_objs()
+            if hasattr(obj, 'get_sensors'):
+                objs += obj.get_sensors()
             else:
                 objs.append(obj)
 
