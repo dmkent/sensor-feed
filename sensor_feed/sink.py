@@ -8,6 +8,8 @@ try:
 except ImportError:
     NO_PANDAS = True
 
+import paho.mqtt.client as mqtt
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -37,6 +39,19 @@ class LoggingSink(Sink):
     def process_value(self, param_name, timestamp, value):
         """Handle a single datapoint."""
         self.logger.warn('%s - %s - %f', timestamp, param_name, value)
+
+
+class MQTTSink(Sink):
+    """Sink that logs all values."""
+    def __init__(self, broker=None, topic_root=''):
+        self.client = mqtt.Client()
+        self.client.connect(broker, 1883, 60)
+        self.topic_root = 'topic_root'
+
+    def process_value(self, param_name, timestamp, value):
+        """Handle a single datapoint."""
+        topic = self.topic_root + '/' + param_name
+        self.client.publish(topic, value)
 
 
 def round_datetime(dtime, freq):
