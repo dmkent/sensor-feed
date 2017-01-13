@@ -46,11 +46,11 @@ class MQTTSink(Sink):
     def __init__(self, broker=None, topic_root=''):
         self.client = mqtt.Client()
         self.client.connect(broker, 1883, 60)
-        self.topic_root = 'topic_root'
+        self.topic_root = topic_root + '/'
 
     def process_value(self, param_name, timestamp, value):
         """Handle a single datapoint."""
-        topic = self.topic_root + '/' + param_name
+        topic = self.topic_root + param_name
         self.client.publish(topic, value)
 
 
