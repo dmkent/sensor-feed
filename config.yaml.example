@@ -1,15 +1,17 @@
 sensors:
-  #- class: RiseAndFallSensor
   - class: CpuLoadAverage
-  #- class: ConstantSensor
-  #- class: ConstantSensor
-  #  kwargs': {'value': 5, 'name': 'Norwegian Blue'}
   - class: sensor_feed.sensor_adc.AdcPollSensor
-    kwargs: 
+    kwargs:
       param_name: soil
       param_id: soil
       param_unit: mV
       dtype: int
       channel: 1
+  - class: sensor_feed.sensor_bme280.BME280Sensor
+  - class: sensor_feed.sensor_si1145.SI1145Sensor
 sinks:
  - class: LoggingSink
+ - class: MQTTSink
+   kwargs:
+     broker: my.mqtt.broker.com
+     topic_root: some_topic_name
